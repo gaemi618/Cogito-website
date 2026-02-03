@@ -3,6 +3,7 @@ import LandingPage from './components/LandingPage';
 import Lobby from './components/Lobby';
 import ChatInterface from './components/ChatInterface';
 import StarBackground from './components/StarBackground';
+import BackgroundMusic from './components/BackgroundMusic';
 import { AnimusType } from './types';
 
 const App: React.FC = () => {
@@ -27,6 +28,9 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
       {/* Global Background Effect */}
       <StarBackground />
+      
+      {/* Background Music Player (Persistent across views) */}
+      <BackgroundMusic />
 
       {/* View Routing */}
       {view === 'landing' && <LandingPage onEnter={enterApp} />}

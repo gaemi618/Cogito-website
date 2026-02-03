@@ -2,22 +2,13 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { AnimusType, Message } from '../types';
 import { CHARACTERS, WORLD_LORE } from '../constants';
 
-const apiKey = process.env.API_KEY;
-
-// Initialize the API client
-// Note: In a real production app, you might want to proxy this through a backend 
-// to hide the API key, but for this demo, we use process.env as instructed.
-const ai = new GoogleGenAI({ apiKey: apiKey });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateAnimusResponse = async (
   animusType: AnimusType,
   history: Message[],
   userMessage: string
 ): Promise<string> => {
-  if (!apiKey) {
-    return "Error: API Key is missing. Please configure process.env.API_KEY.";
-  }
-
   const character = CHARACTERS[animusType];
   
   const systemInstruction = `
@@ -40,12 +31,7 @@ export const generateAnimusResponse = async (
   `;
 
   try {
-    // Construct the prompt with history
     const prompt = userMessage;
-    
-    // We use a simplified approach for history here by appending it to the prompt 
-    // or using the chat interface if maintaining long context is needed. 
-    // For this implementation, we will use the Chat API for better context handling.
     
     const chat = ai.chats.create({
       model: 'gemini-3-flash-preview',
@@ -63,6 +49,6 @@ export const generateAnimusResponse = async (
 
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "(The connection to the Animus seems unstable...)";
+    return "(아니무스와의 연결이 불안정합니다... 잠시 후 다시 시도해주세요.)";
   }
 };
