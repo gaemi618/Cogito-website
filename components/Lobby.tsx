@@ -34,62 +34,57 @@ const Lobby: React.FC<LobbyProps> = ({ onSelectAnimus }) => {
             <h2 className="text-2xl font-serif text-purple-300 border-b border-purple-500/30 pb-2 inline-block">
               {cat.title}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {cat.ids.map((id) => {
                 const char: AnimusCharacter = CHARACTERS[id];
                 return (
                   <div
                     key={id}
-                    className="group relative overflow-hidden rounded-xl border border-gray-700 bg-gray-900 transition-all duration-300 text-left h-64 hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] hover:-translate-y-1 flex flex-col justify-between"
+                    className="group relative overflow-hidden rounded-2xl border border-gray-700 bg-gray-900 transition-all duration-500 text-left h-72 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:-translate-y-2 flex flex-col justify-between"
                   >
-                    {/* Background Image with Overlay */}
+                    {/* Background Image (Location) - Restored to primary focus */}
                     <div className="absolute inset-0">
                         <img 
                             src={char.locationImage} 
                             alt={char.locationName} 
-                            className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-all duration-700 transform group-hover:scale-110" 
+                            className="w-full h-full object-cover opacity-50 group-hover:opacity-40 transition-all duration-700" 
                         />
-                        <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent group-hover:via-gray-900/40 transition-colors`}></div>
+                        <div className={`absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/60 to-transparent`}></div>
                     </div>
                     
                     <div className="relative z-10 p-6 flex flex-col h-full justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className={`text-xs font-bold px-2 py-1 rounded bg-black/60 border border-${char.themeColor} text-gray-300 backdrop-blur-sm`}>
+                      <div className="flex justify-between items-start">
+                         <span className={`text-xs font-bold px-2 py-1 rounded bg-black/40 border border-${char.themeColor} text-gray-200 backdrop-blur-sm shadow-sm`}>
                             {char.role}
                           </span>
-                          <Sparkles size={16} className={`text-${char.themeColor} opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]`} />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-100 mb-1 group-hover:text-white font-serif drop-shadow-lg">{char.name}</h3>
-                        <p className="text-sm text-gray-300 line-clamp-2 italic drop-shadow-md">{char.locationName}</p>
                       </div>
                       
-                      {/* Description Text */}
-                      <p className="text-xs text-gray-400 line-clamp-2 group-hover:opacity-0 transition-opacity absolute bottom-6 left-6 right-6 drop-shadow-md">
-                        {char.description}
-                      </p>
+                      <div className="mt-auto">
+                        <h3 className="text-2xl font-bold text-gray-100 mb-1 group-hover:text-white font-serif drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{char.name}</h3>
+                        <p className="text-sm text-gray-400 italic mb-4 drop-shadow-md">{char.locationName}</p>
 
-                      {/* Action Buttons (Visible on Hover) */}
-                      <div className="flex gap-2 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 mt-auto">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onSelectAnimus(id);
-                          }}
-                          className={`flex-1 flex items-center justify-center bg-${char.themeColor}/30 hover:bg-${char.themeColor}/50 border border-${char.themeColor}/50 text-white py-2 rounded-lg text-sm transition-colors backdrop-blur-md`}
-                        >
-                          상담하기 <ArrowRight size={14} className="ml-1" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setViewingProfile(id);
-                          }}
-                          className="px-3 py-2 bg-black/40 hover:bg-black/60 border border-gray-500/50 rounded-lg text-gray-300 hover:text-white transition-colors backdrop-blur-md"
-                          title="프로필 보기"
-                        >
-                          <Info size={18} />
-                        </button>
+                        {/* Action Buttons */}
+                        <div className="flex gap-3 pt-2 border-t border-gray-800/50">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectAnimus(id);
+                            }}
+                            className={`flex-1 flex items-center justify-center bg-${char.themeColor}/20 hover:bg-${char.themeColor}/40 border border-${char.themeColor}/40 text-white py-3 rounded-xl text-sm transition-all duration-300 backdrop-blur-md shadow-lg group-hover:shadow-${char.themeColor}/20`}
+                          >
+                            상담하기 <ArrowRight size={16} className="ml-2" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setViewingProfile(id);
+                            }}
+                            className="px-4 py-3 bg-gray-800/60 hover:bg-gray-700/80 border border-gray-600/50 rounded-xl text-gray-300 hover:text-white transition-colors backdrop-blur-md"
+                            title="크게 보기"
+                          >
+                            <Info size={20} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
