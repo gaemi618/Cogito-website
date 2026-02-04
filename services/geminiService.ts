@@ -2,9 +2,18 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { AnimusType, Message } from '../types';
 import { CHARACTERS, WORLD_LORE } from '../constants';
 
-// Initialize the API client.
-// process.env.API_KEY is replaced by Vite during build.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Initialize the API client lazily or safely
+let ai: GoogleGenAI | null = null;
+
+const getAiClient = () => {
+  if (!ai) {
+    // process.env.API_KEY is replaced by Vite during build.
+    // We use a fallback empty string to prevent constructor error, though calls will fail if empty.
+    const apiKey = process.env.API_KEY || '';
+    ai = new GoogleGenAI({ apiKey });
+  }
+  return ai;
+};
 
 export const generateAnimusResponse = async (
   animusType: AnimusType,
@@ -39,8 +48,9 @@ export const generateAnimusResponse = async (
 
   try {
     const prompt = userMessage;
+    const client = getAiClient();
     
-    const chat = ai.chats.create({
+    const chat = client.chats.create({
       model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: systemInstruction,
