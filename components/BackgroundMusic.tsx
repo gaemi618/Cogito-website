@@ -1,49 +1,50 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Volume2, VolumeX, Music } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
 
-const BackgroundMusic: React.FC = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+interface BackgroundMusicProps {
+  isPlaying: boolean;
+  onToggle: () => void;
+}
+
+const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ isPlaying, onToggle }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Erik Satie - Gymnopédie No.1 (Public Domain / Wikimedia Commons)
+  // Erik Satie - Gymnopédie No.1 (Public Domain)
   const musicUrl = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Satie_-_Gymnop%C3%A9die_No._1.ogg";
 
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      // Create a promise to handle autoplay policies
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.log("Audio play failed (browser policy):", error);
-        });
-      }
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  // Adjust volume to be subtle
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = 0.4; // 40% volume for background ambiance
+      // Set volume
+      audioRef.current.volume = 0.4;
+
+      if (isPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.error("Audio playback blocked by browser:", error);
+          });
+        }
+      } else {
+        audioRef.current.pause();
+      }
     }
-  }, []);
+  }, [isPlaying]);
 
   return (
     <div className="fixed top-6 right-6 z-50 animate-fade-in">
-      <audio ref={audioRef} loop src={musicUrl} />
+      <audio ref={audioRef} loop crossOrigin="anonymous">
+        <source src={musicUrl} type="audio/ogg" />
+        <source src={musicUrl} type="audio/mpeg" />
+      </audio>
       
       <button
-        onClick={toggleMusic}
+        onClick={onToggle}
         className={`group flex items-center justify-center p-3 rounded-full border transition-all duration-500 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.5)] ${
           isPlaying 
             ? 'bg-purple-900/40 border-purple-400/50 text-purple-200 shadow-[0_0_20px_rgba(168,85,247,0.4)]' 
             : 'bg-black/40 border-gray-600/50 text-gray-400 hover:bg-gray-800/60 hover:text-white'
         }`}
-        title={isPlaying ? "음악 끄기" : "음악 켜기 (Satie - Gymnopédie No.1)"}
+        title={isPlaying ? "음악 끄기" : "음악 켜기"}
       >
         <div className="relative">
           {isPlaying ? (
