@@ -2,6 +2,8 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { AnimusType, Message } from '../types';
 import { CHARACTERS, WORLD_LORE } from '../constants';
 
+// Initialize the API client.
+// process.env.API_KEY is replaced by Vite during build.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateAnimusResponse = async (
@@ -9,6 +11,11 @@ export const generateAnimusResponse = async (
   history: Message[],
   userMessage: string
 ): Promise<string> => {
+  if (!process.env.API_KEY) {
+    console.error("API Key is missing. Please set API_KEY in your environment variables.");
+    return "(시스템 오류: API 키가 설정되지 않았습니다. 관리자에게 문의하세요.)";
+  }
+
   const character = CHARACTERS[animusType];
   
   const systemInstruction = `
